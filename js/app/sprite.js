@@ -11,6 +11,7 @@ define(['base'], function (Base) {
         this.sprite = null;
         this.render = null;
         this.loaded = false;
+        this.printed = false;
         this.path = null;
     }
 
@@ -40,7 +41,7 @@ define(['base'], function (Base) {
             this.sprite = new Image();
             this.sprite.src = this.path;
         }
-        if(this.isLoaded()){
+        if(!this.loaded && this.isLoaded()){
             this.render = document.createElement('canvas');
             this.render.width = this.width;
             this.render.height = this.height;
@@ -50,12 +51,13 @@ define(['base'], function (Base) {
         }
     };
 
-    Sprite.prototype.print = function () {
-        if(!this.loaded || !this.context){
+    Sprite.prototype.print = function (canvas) {
+        if(this.printed || !this.loaded || !canvas.loaded()){
             return;
         }
 
-        this.context.drawImage(this.render, this.x, this.y, this.width, this.height);
+        canvas.drawImage(this.render, this.x, this.y, this.width, this.height);
+        this.printed = true;
     };
 
     return Sprite;

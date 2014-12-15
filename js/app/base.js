@@ -46,9 +46,10 @@ define([], function () {
         }
     };
 
-    Base.prototype.print = function () {
+    Base.prototype.print = function (canvas) {
+
         for(var i in this.children){
-            this.children[i].print();
+            this.children[i].print(canvas);
         }
     };
 

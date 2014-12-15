@@ -3,7 +3,7 @@
  */
 
 'use strict';
-define(['base'], function (Base) {
+define(['base', 'canvas'], function (Base, Canvas) {
 
     /*
      Engine Class is the top level class of our application. Engine Class contains all the information regarding the
@@ -16,9 +16,8 @@ define(['base'], function (Base) {
         if(typeof context_type == 'undefined'){
             context_type = '2d';
         }
-        this.canvas = document.createElement('canvas');
-        document.body.insertBefore(this.canvas, document.body.firstChild);
-        this.context = this.canvas.getContext(context_type);
+
+        this.canvas = new Canvas(context_type);
         this.loaded = false;
         this.timepoint = 0;
     }
@@ -31,17 +30,16 @@ define(['base'], function (Base) {
      Start print looping
      */
     Engine.prototype.loop = function () {
-        if (this.context) {
+        if (this.canvas.loaded()) {
             this.timepoint = new Date().getTime();
             this.process();
-            this.print();
+            this.print(this.canvas);
         }
         window.requestAnimFrame(this.loop.bind(this, null));
     };
 
     Engine.prototype.start = function () {
-        this.canvas.width = this.width;
-        this.canvas.height = this.height;
+        this.canvas.init(this.width, this.height);
         this.loaded = true;
         this.loop();
     };
